@@ -1,0 +1,24 @@
+name: go_transitions
+description: "Easily apply transitions to routes with GoTransitions."
+version: 0.1.0
+homepage: https://www.bravier.com
+repository: https://github.com/arthurbcd/go_transitions.git
+topics:
+ - go-router
+ - page
+ - transition
+ - transitions
+
+environment:
+  sdk: ">=2.18.0 <4.0.0"
+  flutter: ">=3.10.0"
+  
+dependencies:
+  flutter:
+    sdk: flutter
+  go_router: '>=10.0.0 <14.0.0'
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
