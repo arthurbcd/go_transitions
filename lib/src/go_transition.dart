@@ -29,7 +29,7 @@ class GoTransition implements PageTransitionsBuilder {
   /// Default transition with no animation.
   static Widget _noTransition<T>(_, __, ___, ____, Widget child) => child;
 
-  /// The signature for [buildTransitions] builder.
+  /// The [PageTransitionsBuilder.buildTransitions] builder.
   final PageRouteTransitionsBuilder builder;
 
   /// The transition [MatrixTransition.alignment].
@@ -149,33 +149,24 @@ extension GoTransitionExtension on GoTransition {
           GoTransition.defaultReverseDuration ??
           transitionDuration;
 
-      return _PageBuilder(
+      return GoTransitionPage(
         key: key ?? state.pageKey,
         name: name ?? state.name,
         arguments: arguments ?? state.extra,
         restorationId: restorationId,
-        routeBuilder: (context, settings) {
-          return _PageRouteBuilder(
-            settings: settings,
-            pageTransitionsBuilder: buildTransitions,
-            onCanTransitionTo: canTransitionTo,
-            onCanTransitionFrom: canTransitionFrom,
-            transitionDuration: transitionDuration,
-            reverseTransitionDuration: reverseTransitionDuration,
-            opaque: opaque,
-            maintainState: maintainState,
-            fullscreenDialog: fullscreenDialog,
-            barrierDismissible: barrierDismissible,
-            allowSnapshotting: allowSnapshotting,
-            barrierColor: barrierColor,
-            barrierLabel: barrierLabel,
-            pageBuilder: (_, __, ___) => Semantics(
-              scopesRoute: true,
-              explicitChildNodes: true,
-              child: child,
-            ),
-          );
-        },
+        pageTransitionsBuilder: buildTransitions,
+        canTransitionTo: canTransitionTo,
+        canTransitionFrom: canTransitionFrom,
+        transitionDuration: transitionDuration,
+        reverseTransitionDuration: reverseTransitionDuration,
+        opaque: opaque,
+        maintainState: maintainState,
+        fullscreenDialog: fullscreenDialog,
+        barrierDismissible: barrierDismissible,
+        allowSnapshotting: allowSnapshotting,
+        barrierColor: barrierColor,
+        barrierLabel: barrierLabel,
+        child: child,
       );
     };
   }
@@ -246,31 +237,15 @@ extension GoTransitionExtension on GoTransition {
   }
 }
 
-class _PageBuilder<T> extends Page<T> {
-  const _PageBuilder({
-    super.key,
-    super.name,
-    super.arguments,
-    super.restorationId,
-    required this.routeBuilder,
-  });
-
-  final Route<T> Function(BuildContext context, RouteSettings settings)
-      routeBuilder;
-
-  @override
-  Route<T> createRoute(BuildContext context) => routeBuilder(context, this);
-}
-
 typedef PageRouteTransitionsBuilder = Widget Function(
     PageRoute, BuildContext, Animation<double>, Animation<double>, Widget);
 
 typedef CanTransition = bool Function(TransitionRoute nextRoute);
 
-class _PageRouteBuilder<T> extends PageRouteBuilder<T> {
-  _PageRouteBuilder({
+class GoTransitionPage<T> extends CustomTransitionPage<T> {
+  const GoTransitionPage({
+    required super.child,
     required this.pageTransitionsBuilder,
-    required super.pageBuilder,
     super.barrierColor,
     super.barrierLabel,
     super.barrierDismissible = false,
@@ -279,21 +254,37 @@ class _PageRouteBuilder<T> extends PageRouteBuilder<T> {
     super.opaque = true,
     super.transitionDuration = const Duration(milliseconds: 300),
     super.reverseTransitionDuration,
-    super.allowSnapshotting = true,
-    super.settings,
-    this.onCanTransitionTo,
-    this.onCanTransitionFrom,
-  });
+    super.arguments,
+    super.key,
+    super.name,
+    super.restorationId,
+    this.allowSnapshotting = true,
+    this.canTransitionTo,
+    this.canTransitionFrom,
+  }) : super(transitionsBuilder: _noTransition);
 
+  /// The [PageTransitionsBuilder.buildTransitions] builder.
   final PageRouteTransitionsBuilder pageTransitionsBuilder;
-  final CanTransition? onCanTransitionTo;
-  final CanTransition? onCanTransitionFrom;
+
+  /// Overrides the default [PageRoute.canTransitionTo] behavior.
+  final CanTransition? canTransitionTo;
+
+  /// Overrides the default [PageRoute.canTransitionFrom] behavior.
+  final CanTransition? canTransitionFrom;
+
+  /// The [PageRoute.allowSnapshotting] property.
+  final bool allowSnapshotting;
+
+  static Widget _noTransition<T>(_, __, ___, Widget child) => child;
 
   @override
   RouteTransitionsBuilder get transitionsBuilder =>
       (context, animation, secondaryAnimation, child) {
+        final route = ModalRoute.of(context);
+        if (route is! PageRoute) return child;
+
         return pageTransitionsBuilder(
-          this,
+          route,
           context,
           animation,
           secondaryAnimation,
@@ -302,8 +293,44 @@ class _PageRouteBuilder<T> extends PageRouteBuilder<T> {
       };
 
   @override
+  Route<T> createRoute(BuildContext context) => _GoTransitionRoute(this);
+}
+
+class _GoTransitionRoute<T> extends PageRoute<T> {
+  _GoTransitionRoute(GoTransitionPage<T> page) : super(settings: page);
+
+  GoTransitionPage<T> get _page => settings as GoTransitionPage<T>;
+
+  @override
+  bool get barrierDismissible => _page.barrierDismissible;
+
+  @override
+  Color? get barrierColor => _page.barrierColor;
+
+  @override
+  String? get barrierLabel => _page.barrierLabel;
+
+  @override
+  Duration get transitionDuration => _page.transitionDuration;
+
+  @override
+  Duration get reverseTransitionDuration => _page.reverseTransitionDuration;
+
+  @override
+  bool get maintainState => _page.maintainState;
+
+  @override
+  bool get fullscreenDialog => _page.fullscreenDialog;
+
+  @override
+  bool get opaque => _page.opaque;
+
+  @override
+  bool get allowSnapshotting => _page.allowSnapshotting;
+
+  @override
   bool canTransitionTo(TransitionRoute<dynamic> nextRoute) {
-    if (onCanTransitionTo != null) return onCanTransitionTo!(nextRoute);
+    if (_page.canTransitionTo != null) return _page.canTransitionTo!(nextRoute);
 
     // Don't perform outgoing animation if the next route is a fullscreen dialog.
     return super.canTransitionTo(nextRoute) && !fullscreenDialog;
@@ -311,6 +338,33 @@ class _PageRouteBuilder<T> extends PageRouteBuilder<T> {
 
   @override
   bool canTransitionFrom(TransitionRoute nextRoute) {
-    return (onCanTransitionFrom ?? super.canTransitionFrom)(nextRoute);
+    return (_page.canTransitionFrom ?? super.canTransitionFrom)(nextRoute);
   }
+
+  @override
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) =>
+      Semantics(
+        scopesRoute: true,
+        explicitChildNodes: true,
+        child: _page.child,
+      );
+
+  @override
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) =>
+      _page.pageTransitionsBuilder(
+        this,
+        context,
+        animation,
+        secondaryAnimation,
+        child,
+      );
 }

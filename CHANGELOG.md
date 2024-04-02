@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0
+
+Introduces `GoTransitionPage`, an extended `CustomTransitionPage` with:
+
+- `PageTransitionsBuilder.buildTransitions` as pageTransitionsBuilder.
+- `PageRoute.canTransitionTo` as canTransitionTo.
+- `PageRoute.canTransitionFrom` as canTransitionFrom.
+- `PageRoute.allowSnapshotting` as allowSnapshottting.
+
 ## 0.2.0
 
 Flutter works with `Widget Function(PageRoute, BuildContext, Animation<double>, Animation<double>, Widget)` signature. This release changes the signature of `GoTransition.builder` to match this.
