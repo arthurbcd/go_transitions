@@ -27,10 +27,10 @@ class GoTransition implements PageTransitionsBuilder {
   });
 
   /// Default transition with no animation.
-  static Widget _noTransition(_, __, ___, Widget child) => child;
+  static Widget _noTransition<T>(_, __, ___, ____, Widget child) => child;
 
-  /// The [PageRoute.buildTransitions] builder.
-  final RouteTransitionsBuilder builder;
+  /// The signature for [buildTransitions] builder.
+  final PageRouteTransitionsBuilder builder;
 
   /// The transition [MatrixTransition.alignment].
   final Alignment? alignment;
@@ -56,14 +56,42 @@ class GoTransition implements PageTransitionsBuilder {
     return scope?.goTransition;
   }
 
-  /// Tears down this [GoTransition] to [GoRouterPageBuilder] signature.
+  /// Tears down this to [GoRouterPageBuilder] signature with default values.
   Page call(BuildContext context, GoRouterState state) {
     return build()(context, state);
   }
 
   @override
-  Widget buildTransitions<T>(_, context, animation, secondaryAnimation, child) {
-    return transitionsBuilder(context, animation, secondaryAnimation, child);
+  @mustCallSuper
+  Widget buildTransitions<T>(
+    route,
+    context,
+    animation,
+    secondaryAnimation,
+    child,
+  ) {
+    return GoTransitionScope(
+      goTransition: this,
+      child: Builder(
+        builder: (context) {
+          return builder(
+            route,
+            context,
+            CurvedAnimation(
+              parent: animation,
+              curve: curve ?? GoTransition.defaultCurve,
+              reverseCurve: reverseCurve ?? GoTransition.defaultReverseCurve,
+            ),
+            CurvedAnimation(
+              parent: secondaryAnimation,
+              curve: curve ?? GoTransition.defaultCurve,
+              reverseCurve: reverseCurve ?? GoTransition.defaultReverseCurve,
+            ),
+            child,
+          );
+        },
+      ),
+    );
   }
 }
 
@@ -81,32 +109,6 @@ class GoTransitionScope extends InheritedWidget {
 }
 
 extension GoTransitionExtension on GoTransition {
-  RouteTransitionsBuilder get transitionsBuilder {
-    return (context, animation, secondaryAnimation, child) {
-      return GoTransitionScope(
-        goTransition: this,
-        child: Builder(
-          builder: (context) {
-            return builder(
-              context,
-              CurvedAnimation(
-                parent: animation,
-                curve: curve ?? GoTransition.defaultCurve,
-                reverseCurve: reverseCurve ?? GoTransition.defaultReverseCurve,
-              ),
-              CurvedAnimation(
-                parent: secondaryAnimation,
-                curve: curve ?? GoTransition.defaultCurve,
-                reverseCurve: reverseCurve ?? GoTransition.defaultReverseCurve,
-              ),
-              child,
-            );
-          },
-        ),
-      );
-    };
-  }
-
   /// Builds a [GoRouterPageBuilder] of this [GoTransition].
   ///
   /// - [duration] defaults to [GoTransition.defaultDuration].
@@ -129,10 +131,13 @@ extension GoTransitionExtension on GoTransition {
     String? name,
     Object? arguments,
     String? restorationId,
+    CanTransition? canTransitionTo,
+    CanTransition? canTransitionFrom,
   }) {
     return (context, state) {
       final last =
           GoRouter.of(context).routerDelegate.currentConfiguration.last;
+      // ignore: unnecessary_cast
       final child = (last.route as GoRoute).builder?.call(context, state);
 
       if (child == null) {
@@ -150,9 +155,11 @@ extension GoTransitionExtension on GoTransition {
         arguments: arguments ?? state.extra,
         restorationId: restorationId,
         routeBuilder: (context, settings) {
-          return PageRouteBuilder(
+          return _PageRouteBuilder(
             settings: settings,
-            transitionsBuilder: transitionsBuilder,
+            pageTransitionsBuilder: buildTransitions,
+            onCanTransitionTo: canTransitionTo,
+            onCanTransitionFrom: canTransitionFrom,
             transitionDuration: transitionDuration,
             reverseTransitionDuration: reverseTransitionDuration,
             opaque: opaque,
@@ -195,6 +202,8 @@ extension GoTransitionExtension on GoTransition {
     String? name,
     Object? arguments,
     String? restorationId,
+    CanTransition? canTransitionTo,
+    CanTransition? canTransitionFrom,
   }) {
     return build(
       duration: duration,
@@ -210,12 +219,14 @@ extension GoTransitionExtension on GoTransition {
       name: name,
       arguments: arguments,
       restorationId: restorationId,
+      canTransitionTo: canTransitionTo,
+      canTransitionFrom: canTransitionFrom,
     );
   }
 
   /// Returns a copy of this [GoTransition] with the given properties.
   GoTransition copyWith({
-    RouteTransitionsBuilder? builder,
+    PageRouteTransitionsBuilder? builder,
     Alignment? alignment,
     Offset? offset,
     Axis? axis,
@@ -249,4 +260,57 @@ class _PageBuilder<T> extends Page<T> {
 
   @override
   Route<T> createRoute(BuildContext context) => routeBuilder(context, this);
+}
+
+typedef PageRouteTransitionsBuilder = Widget Function(
+    PageRoute, BuildContext, Animation<double>, Animation<double>, Widget);
+
+typedef CanTransition = bool Function(TransitionRoute nextRoute);
+
+class _PageRouteBuilder<T> extends PageRouteBuilder<T> {
+  _PageRouteBuilder({
+    required this.pageTransitionsBuilder,
+    required super.pageBuilder,
+    super.barrierColor,
+    super.barrierLabel,
+    super.barrierDismissible = false,
+    super.fullscreenDialog = false,
+    super.maintainState = true,
+    super.opaque = true,
+    super.transitionDuration = const Duration(milliseconds: 300),
+    super.reverseTransitionDuration,
+    super.allowSnapshotting = true,
+    super.settings,
+    this.onCanTransitionTo,
+    this.onCanTransitionFrom,
+  });
+
+  final PageRouteTransitionsBuilder pageTransitionsBuilder;
+  final CanTransition? onCanTransitionTo;
+  final CanTransition? onCanTransitionFrom;
+
+  @override
+  RouteTransitionsBuilder get transitionsBuilder =>
+      (context, animation, secondaryAnimation, child) {
+        return pageTransitionsBuilder(
+          this,
+          context,
+          animation,
+          secondaryAnimation,
+          child,
+        );
+      };
+
+  @override
+  bool canTransitionTo(TransitionRoute<dynamic> nextRoute) {
+    if (onCanTransitionTo != null) return onCanTransitionTo!(nextRoute);
+
+    // Don't perform outgoing animation if the next route is a fullscreen dialog.
+    return super.canTransitionTo(nextRoute) && !fullscreenDialog;
+  }
+
+  @override
+  bool canTransitionFrom(TransitionRoute nextRoute) {
+    return (onCanTransitionFrom ?? super.canTransitionFrom)(nextRoute);
+  }
 }

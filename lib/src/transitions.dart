@@ -7,7 +7,7 @@ import 'with_extensions.dart';
 class InvisibleGoTransition extends GoTransition {
   const InvisibleGoTransition();
   @override
-  RouteTransitionsBuilder get builder => (_, animation, __, child) =>
+  PageRouteTransitionsBuilder get builder => (_, __, animation, ___, child) =>
       Visibility(visible: animation.value == 1.0, child: child);
 }
 
@@ -15,8 +15,8 @@ class ThemeGoTransition extends GoTransition {
   const ThemeGoTransition();
 
   @override
-  RouteTransitionsBuilder get builder {
-    return (context, animation, secondaryAnimation, child) {
+  PageRouteTransitionsBuilder get builder {
+    return (route, context, animation, secondaryAnimation, child) {
       final pageTransitionsTheme = Theme.of(context).pageTransitionsTheme;
 
       assert(
@@ -25,7 +25,8 @@ class ThemeGoTransition extends GoTransition {
         'as it will cause an infinite loop.',
       );
 
-      return pageTransitionsTheme.buildTransitions.builder(
+      return pageTransitionsTheme.buildTransitions(
+        route,
         context,
         animation,
         secondaryAnimation,
@@ -42,59 +43,59 @@ extension on GoTransition {
 class FadeGoTransition extends GoTransition {
   const FadeGoTransition();
   @override
-  RouteTransitionsBuilder get builder => none.withFade.builder;
+  PageRouteTransitionsBuilder get builder => none.withFade.builder;
 }
 
 class RotateGoTransition extends GoTransition {
   const RotateGoTransition();
   @override
-  RouteTransitionsBuilder get builder => none.withRotation.builder;
+  PageRouteTransitionsBuilder get builder => none.withRotation.builder;
 }
 
 class ScaleGoTransition extends GoTransition {
   const ScaleGoTransition();
   @override
-  RouteTransitionsBuilder get builder => none.withScale.builder;
+  PageRouteTransitionsBuilder get builder => none.withScale.builder;
 }
 
 class SizeGoTransition extends GoTransition {
   const SizeGoTransition();
   @override
-  RouteTransitionsBuilder get builder => none.withSize.builder;
+  PageRouteTransitionsBuilder get builder => none.withSize.builder;
 }
 
 class SlideGoTransition extends GoTransition {
   const SlideGoTransition();
   @override
-  RouteTransitionsBuilder get builder => none.withSlide.builder;
+  PageRouteTransitionsBuilder get builder => none.withSlide.builder;
 }
 
 class FadeUpwardsGoTransition extends GoTransition {
   const FadeUpwardsGoTransition();
   @override
-  RouteTransitionsBuilder get builder =>
-      const FadeUpwardsPageTransitionsBuilder().buildTransitions.builder;
+  PageRouteTransitionsBuilder get builder =>
+      const FadeUpwardsPageTransitionsBuilder().buildTransitions;
 }
 
 class OpenUpwardsGoTransition extends GoTransition {
   const OpenUpwardsGoTransition();
   @override
-  RouteTransitionsBuilder get builder =>
-      const OpenUpwardsPageTransitionsBuilder().buildTransitions.builder;
+  PageRouteTransitionsBuilder get builder =>
+      const OpenUpwardsPageTransitionsBuilder().buildTransitions;
 }
 
 class ZoomGoTransition extends GoTransition {
   const ZoomGoTransition();
   @override
-  RouteTransitionsBuilder get builder =>
-      const ZoomPageTransitionsBuilder().buildTransitions.builder;
+  PageRouteTransitionsBuilder get builder =>
+      const ZoomPageTransitionsBuilder().buildTransitions;
 }
 
 class CupertinoGoTransition extends GoTransition {
   const CupertinoGoTransition();
   @override
-  RouteTransitionsBuilder get builder =>
-      const CupertinoPageTransitionsBuilder().buildTransitions.builder;
+  PageRouteTransitionsBuilder get builder =>
+      const CupertinoPageTransitionsBuilder().buildTransitions;
 }
 
 enum GoTransitions implements GoTransition {
@@ -124,6 +125,9 @@ enum GoTransitions implements GoTransition {
 
   /// Sintax-sugar for building [ModalBottomSheetRoute] like transitions.
   static final bottomSheet = GoTransitions.slide.toTop.buildPopup();
+  
+  @override
+  PageRouteTransitionsBuilder get builder => goTransition.builder;
 
   @override
   Alignment? get alignment => goTransition.alignment;
@@ -133,9 +137,6 @@ enum GoTransitions implements GoTransition {
 
   @override
   double? get axisAlignment => goTransition.axisAlignment;
-
-  @override
-  RouteTransitionsBuilder get builder => goTransition.builder;
 
   @override
   Curve? get curve => goTransition.curve;
@@ -166,22 +167,5 @@ enum GoTransitions implements GoTransition {
       secondaryAnimation,
       child,
     );
-  }
-}
-
-typedef _PageRouteTransitionsBuilder = Widget Function<T>(
-    PageRoute<T>, BuildContext, Animation<double>, Animation<double>, Widget);
-
-extension on _PageRouteTransitionsBuilder {
-  RouteTransitionsBuilder get builder {
-    return (context, animation, secondaryAnimation, child) {
-      return this(
-        ModalRoute.of(context) as PageRoute,
-        context,
-        animation,
-        secondaryAnimation,
-        child,
-      );
-    };
   }
 }

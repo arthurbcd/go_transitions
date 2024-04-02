@@ -6,10 +6,10 @@ extension GoTransitionsWithExtension on GoTransition {
   /// Returns a new [GoTransition] with a [FadeTransition].
   GoTransition get withFade {
     return copyWith(
-      builder: (context, animation, secondaryAnimation, child) {
+      builder: (route, context, animation, secondaryAnimation, child) {
         return FadeTransition(
           opacity: animation,
-          child: builder(context, animation, secondaryAnimation, child),
+          child: builder(route, context, animation, secondaryAnimation, child),
         );
       },
     );
@@ -18,13 +18,13 @@ extension GoTransitionsWithExtension on GoTransition {
   /// Returns a new [GoTransition] with a [ScaleTransition].
   GoTransition get withScale {
     return copyWith(
-      builder: (context, animation, secondaryAnimation, child) {
+      builder: (route, context, animation, secondaryAnimation, child) {
         final alignment = this.alignment ?? GoTransition.of(context)?.alignment;
 
         return ScaleTransition(
           alignment: alignment ?? Alignment.center,
           scale: animation,
-          child: builder(context, animation, secondaryAnimation, child),
+          child: builder(route, context, animation, secondaryAnimation, child),
         );
       },
     );
@@ -33,7 +33,7 @@ extension GoTransitionsWithExtension on GoTransition {
   /// Returns a new [GoTransition] with a [SizeTransition].
   GoTransition get withSize {
     return copyWith(
-      builder: (context, animation, secondaryAnimation, child) {
+      builder: (route, context, animation, secondaryAnimation, child) {
         final go = GoTransition.of(context);
 
         return Align(
@@ -42,7 +42,8 @@ extension GoTransitionsWithExtension on GoTransition {
             sizeFactor: animation,
             axis: axis ?? go?.axis ?? Axis.vertical,
             axisAlignment: axisAlignment ?? go?.axisAlignment ?? 0.0,
-            child: builder(context, animation, secondaryAnimation, child),
+            child:
+                builder(route, context, animation, secondaryAnimation, child),
           ),
         );
       },
@@ -52,7 +53,7 @@ extension GoTransitionsWithExtension on GoTransition {
   /// Returns a new [GoTransition] with a [SlideTransition].
   GoTransition get withSlide {
     return copyWith(
-      builder: (context, animation, secondaryAnimation, child) {
+      builder: (route, context, animation, secondaryAnimation, child) {
         final go = GoTransition.of(context);
 
         return SlideTransition(
@@ -60,7 +61,7 @@ extension GoTransitionsWithExtension on GoTransition {
             begin: offset ?? go?.offset ?? Offset.zero,
             end: Offset.zero,
           ).animate(animation),
-          child: builder(context, animation, secondaryAnimation, child),
+          child: builder(route, context, animation, secondaryAnimation, child),
         );
       },
     );
@@ -69,13 +70,13 @@ extension GoTransitionsWithExtension on GoTransition {
   /// Returns a new [GoTransition] with a [RotationTransition].
   GoTransition get withRotation {
     return copyWith(
-      builder: (context, animation, secondaryAnimation, child) {
+      builder: (route, context, animation, secondaryAnimation, child) {
         final go = GoTransition.of(context);
 
         return RotationTransition(
           turns: animation,
           alignment: alignment ?? go?.alignment ?? Alignment.center,
-          child: builder(context, animation, secondaryAnimation, child),
+          child: builder(route, context, animation, secondaryAnimation, child),
         );
       },
     );

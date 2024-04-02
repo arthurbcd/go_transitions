@@ -68,6 +68,7 @@ class MainApp extends StatelessWidget {
                     path: 'fullscreen-dialog',
                     builder: (_, __) => const FullscreenDialogPage(),
                     pageBuilder: GoTransitions.fullscreenDialog,
+                    // pageBuilder: GoTransitions.fullscreenDialog,
                   ),
                   GoRoute(
                     path: 'dialog',
@@ -165,9 +166,9 @@ class FullscreenDialogPage extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            context.go('/');
+            context.push('/fullscreen-dialog');
           },
-          child: const Text('Back to InitialPage'),
+          child: const Text('to 2'),
         ),
       ),
     );
