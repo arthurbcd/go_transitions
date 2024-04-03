@@ -68,7 +68,6 @@ class MainApp extends StatelessWidget {
                     path: 'fullscreen-dialog',
                     builder: (_, __) => const FullscreenDialogPage(),
                     pageBuilder: GoTransitions.fullscreenDialog,
-                    // pageBuilder: GoTransitions.fullscreenDialog,
                   ),
                   GoRoute(
                     path: 'dialog',
@@ -153,6 +152,29 @@ class InitialPage extends StatelessWidget {
   }
 }
 
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.deepPurple,
+      appBar: AppBar(
+        title: Text('$runtimeType'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            context.go('/');
+          },
+          child: const Text('Back to InitialPage'),
+        ),
+      ),
+    );
+  }
+}
+
+
 class FullscreenDialogPage extends StatelessWidget {
   const FullscreenDialogPage({super.key});
 
@@ -222,28 +244,6 @@ class MyBottomSheet extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.deepPurple,
-      appBar: AppBar(
-        title: Text('$runtimeType'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            context.go('/');
-          },
-          child: const Text('Back to InitialPage'),
-        ),
-      ),
     );
   }
 }

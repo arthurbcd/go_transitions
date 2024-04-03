@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.2
+
+- Added 'child' property to `GoTransition.build` for those who want to explicitly define the child widget, instead of using the default resolved `child` of the pushed `GoRoute.builder`.
+
 ## 0.3.1
 
 - Improved location matcher for `GoTransition.build`.

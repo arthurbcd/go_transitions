@@ -117,6 +117,8 @@ extension GoTransitionExtension on GoTransition {
   /// - [name] defaults to [GoRouterState.name].
   /// - [arguments] defaults to [GoRouterState.extra].
   ///
+  /// If [child] is null, it will use the current [GoRoute.builder] as child.
+  ///
   GoRouterPageBuilder build({
     Duration? duration,
     Duration? reverseDuration,
@@ -133,23 +135,17 @@ extension GoTransitionExtension on GoTransition {
     String? restorationId,
     CanTransition? canTransitionTo,
     CanTransition? canTransitionFrom,
+    Widget? child,
   }) {
     return (context, state) {
-      final router = GoRouter.of(context);
-      final matches = router.configuration.findMatch(state.matchedLocation);
-      final route = matches.routes.whereType<GoRoute>().firstWhere(
-        (e) {
-          final location = router.configuration.locationForRoute(e);
-          return location == state.matchedLocation;
-        },
-        orElse: () {
-          // ignore: unnecessary_cast
-          return router.routerDelegate.currentConfiguration.last.route
-              as GoRoute;
-        },
-      );
-
-      final child = route.builder?.call(context, state);
+      child ??= GoRouter.of(context)
+          .routerDelegate
+          .currentConfiguration
+          .routes
+          .whereType<GoRoute>()
+          .last
+          .builder
+          ?.call(context, state);
 
       if (child == null) {
         throw GoError('The route ${state.fullPath} does not have a builder.');
@@ -177,7 +173,7 @@ extension GoTransitionExtension on GoTransition {
         allowSnapshotting: allowSnapshotting,
         barrierColor: barrierColor,
         barrierLabel: barrierLabel,
-        child: child,
+        child: child!,
       );
     };
   }
@@ -189,6 +185,8 @@ extension GoTransitionExtension on GoTransition {
   /// - [key] defaults to [GoRouterState.pageKey].
   /// - [name] defaults to [GoRouterState.name].
   /// - [arguments] defaults to [GoRouterState.extra].
+  ///
+  /// If [child] is null, it will use the current [GoRoute.builder] as child.
   ///
   GoRouterPageBuilder buildPopup({
     Duration? duration,
@@ -206,6 +204,7 @@ extension GoTransitionExtension on GoTransition {
     String? restorationId,
     CanTransition? canTransitionTo,
     CanTransition? canTransitionFrom,
+    Widget? child,
   }) {
     return build(
       duration: duration,
@@ -223,6 +222,7 @@ extension GoTransitionExtension on GoTransition {
       restorationId: restorationId,
       canTransitionTo: canTransitionTo,
       canTransitionFrom: canTransitionFrom,
+      child: child,
     );
   }
 
