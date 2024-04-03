@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+
+- Improved location matcher for `GoTransition.build`.
+
 ## 0.3.0
 
 Introduces `GoTransitionPage`, an extended `CustomTransitionPage` with:

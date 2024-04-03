@@ -135,10 +135,21 @@ extension GoTransitionExtension on GoTransition {
     CanTransition? canTransitionFrom,
   }) {
     return (context, state) {
-      final last =
-          GoRouter.of(context).routerDelegate.currentConfiguration.last;
-      // ignore: unnecessary_cast
-      final child = (last.route as GoRoute).builder?.call(context, state);
+      final router = GoRouter.of(context);
+      final matches = router.configuration.findMatch(state.matchedLocation);
+      final route = matches.routes.whereType<GoRoute>().firstWhere(
+        (e) {
+          final location = router.configuration.locationForRoute(e);
+          return location == state.matchedLocation;
+        },
+        orElse: () {
+          // ignore: unnecessary_cast
+          return router.routerDelegate.currentConfiguration.last.route
+              as GoRoute;
+        },
+      );
+
+      final child = route.builder?.call(context, state);
 
       if (child == null) {
         throw GoError('The route ${state.fullPath} does not have a builder.');
