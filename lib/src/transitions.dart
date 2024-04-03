@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -95,7 +96,41 @@ class CupertinoGoTransition extends GoTransition {
   const CupertinoGoTransition();
   @override
   PageRouteTransitionsBuilder get builder =>
-      const CupertinoPageTransitionsBuilder().buildTransitions;
+      CupertinoRouteTransitionMixin.buildPageTransitions;
+}
+
+class MaterialGoTransition extends GoTransition {
+  const MaterialGoTransition();
+  @override
+  PageRouteTransitionsBuilder get builder =>
+      (route, context, animation, secondaryAnimation, child) =>
+          _MaterialRoute(route: route, child: child)
+              .buildTransitions(context, animation, secondaryAnimation, child);
+}
+
+class _MaterialRoute extends PageRoute with MaterialRouteTransitionMixin {
+  _MaterialRoute({
+    required this.route,
+    required this.child,
+  }) : super(
+          fullscreenDialog: route.fullscreenDialog,
+          allowSnapshotting: route.allowSnapshotting,
+          barrierDismissible: route.barrierDismissible,
+        );
+
+  final PageRoute route;
+  final Widget child;
+
+  @override
+  NavigatorState? get navigator => route.navigator;
+
+  @override
+  bool get maintainState => route.maintainState;
+
+  @override
+  Widget buildContent(BuildContext context) {
+    return child;
+  }
 }
 
 enum GoTransitions implements GoTransition {
@@ -110,22 +145,27 @@ enum GoTransitions implements GoTransition {
   fadeUpwards(FadeUpwardsGoTransition()),
   openUpwards(OpenUpwardsGoTransition()),
   zoom(ZoomGoTransition()),
-  cupertino(CupertinoGoTransition());
+  cupertino(CupertinoGoTransition()),
+  material(MaterialGoTransition());
 
   const GoTransitions(this.goTransition);
   final GoTransition goTransition;
 
   /// Sintax-sugar for building [GoTransitions.theme] with [fullscreenDialog].
-  static final fullscreenDialog = GoTransitions.theme.build(
-    fullscreenDialog: true,
-  );
+  static GoRouterPageBuilder get fullscreenDialog {
+    return GoTransitions.theme.build(fullscreenDialog: true);
+  }
 
   /// Sintax-sugar for building [RawDialogRoute] like transitions.
-  static final dialog = GoTransitions.fade.buildPopup();
+  static GoRouterPageBuilder get dialog {
+    return GoTransitions.fade.buildPopup();
+  }
 
   /// Sintax-sugar for building [ModalBottomSheetRoute] like transitions.
-  static final bottomSheet = GoTransitions.slide.toTop.buildPopup();
-  
+  static GoRouterPageBuilder get bottomSheet {
+    return GoTransitions.slide.toTop.buildPopup();
+  }
+
   @override
   PageRouteTransitionsBuilder get builder => goTransition.builder;
 

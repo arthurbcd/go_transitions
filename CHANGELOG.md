@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0
+
+- Added `GoTransitions.material`.
+- Changed `fullscreenDialog`, `dialog` and `bottomSheet` instances to factory getters.
+
 ## 0.3.2
 
 - Added 'child' property to `GoTransition.build` for those who want to explicitly define the child widget, instead of using the default resolved `child` of the pushed `GoRoute.builder`.
