@@ -17,18 +17,20 @@ class MainApp extends StatelessWidget {
 
     return MaterialApp.router(
       /// Easily set the default page transitions for the entire app.
-      theme: ThemeData(
-        pageTransitionsTheme: const PageTransitionsTheme(
-          builders: {
-            TargetPlatform.android: GoTransitions.fadeUpwards,
-            TargetPlatform.iOS: GoTransitions.cupertino,
-            TargetPlatform.macOS: GoTransitions.cupertino,
-          },
-        ),
-      ),
+      // theme: ThemeData(
+      //   pageTransitionsTheme: const PageTransitionsTheme(
+      //     builders: {
+      //       TargetPlatform.android: GoTransitions.fadeUpwards,
+      //       TargetPlatform.macOS: GoTransitions.cupertino,
+      //       TargetPlatform.iOS: GoTransitions.cupertino,
+      //     },
+      //   ),
+      // ),
       routerConfig: GoRouter(
+        observers: [GoTransition.observer],
         routes: [
           ShellRoute(
+            observers: [GoTransition.observer],
             builder: (context, state, child) {
               return Scaffold(
                 appBar: AppBar(
@@ -41,28 +43,37 @@ class MainApp extends StatelessWidget {
               GoRoute(
                 path: '/',
                 builder: (_, __) => const InitialPage(),
+                // pageBuilder: GoTransitions.cupertino,
                 routes: [
                   GoRoute(
-                    path: 'theme',
+                    path: 'theme/:id',
                     builder: (_, __) => const HomePage(),
-                    pageBuilder: GoTransitions.theme,
+                    pageBuilder: GoTransitions.cupertino,
                   ),
                   GoRoute(
                     path: 'slide',
                     builder: (_, __) => const HomePage(),
-                    pageBuilder: GoTransitions.slide.toRight.withFade,
+                    pageBuilder: GoTransitions.slide.toRight.onPrevious,
+                  ),
+                  GoRoute(
+                    path: 'fade',
+                    builder: (_, __) => const HomePage(),
+                    pageBuilder: GoTransitions.fade,
+                  ),
+                  GoRoute(
+                    path: 'size',
+                    builder: (_, __) => const HomePage(),
+                    pageBuilder: GoTransitions.size.onPrevious,
                   ),
                   GoRoute(
                     path: 'rotate',
                     builder: (_, __) => const HomePage(),
-                    pageBuilder: GoTransitions.rotate.withScale,
+                    pageBuilder: GoTransitions.rotate,
                   ),
                   GoRoute(
                     path: 'scale',
                     builder: (_, __) => const HomePage(),
-                    pageBuilder: GoTransitions.scale.withFade.toBottom.build(
-                      barrierColor: Colors.black54,
-                    ),
+                    pageBuilder: GoTransitions.scale.onPrevious.toRight,
                   ),
                   GoRoute(
                     path: 'fullscreen-dialog',
@@ -105,7 +116,7 @@ class InitialPage extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                context.go('/theme');
+                context.go('/theme/1');
               },
               child: const Text('Go to HomePage with .theme'),
             ),
@@ -120,6 +131,18 @@ class InitialPage extends StatelessWidget {
                 context.go('/rotate');
               },
               child: const Text('Go to HomePage with .rotate'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                context.go('/fade');
+              },
+              child: const Text('Go to HomePage with .fade'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                context.go('/size');
+              },
+              child: const Text('Go to HomePage with .size'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -173,7 +196,6 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
 
 class FullscreenDialogPage extends StatelessWidget {
   const FullscreenDialogPage({super.key});

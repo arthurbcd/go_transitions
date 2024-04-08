@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.5.0
+
+The package was internally rewritten to make it completely compatible with native classes such as Page, CupertinoPage, MaterialPage when transitionating between them. Which was not possible before if you were using both them and GoTransitions.
+
+- Removed super enums in favor of static instances.
+- Added `GoTransitionStyle` dedicated class for defining transition styles.
+- Added `GoTransitionSettings` dedicated class for defining transition settings.
+- Added `GoTransitionModifiers.withStyle` for modifing the style of a GoTransition.
+- Added `GoTransitionModifiers.withSettings` for modifing the settings of a GoTransition.
+
+Experimental: Now you can apply complex transitions on both previous and current routes at the same time, or simply animate just the previous route for "reveal" transitions:
+
+- Added `GoTransition.observer`.
+- Added `GoTransition.previousChildOf` to get the child of any previous route. Requires `GoTransition.observer`.
+- Added `GoTransitions.onPrevious` for applying transitions on the previous route. Requires `GoTransition.observer`.
+
+Ex: `GoTransition.slide.toRight.onPrevious`.
+
+Thanks to `jtkeyva` for the contribution.
+
 ## 0.4.0
 
 - Added `GoTransitions.material`.
