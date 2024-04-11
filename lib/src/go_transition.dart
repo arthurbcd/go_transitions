@@ -205,7 +205,7 @@ mixin TransitionData {
   /// The underlying [GoTransitionPage].
   GoTransitionPage get page;
 
-  bool get allowSnapshotting => page.allowSnapshotting;
+  bool get allowSnapshotting => page.settings.allowSnapshotting;
   Duration get transitionDuration =>
       page.settings.duration ?? GoTransition.defaultDuration;
   Duration get reverseTransitionDuration =>

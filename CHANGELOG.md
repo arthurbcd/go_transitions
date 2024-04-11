@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1
+
+- Fixed allowSnapshotting recursive call.
+
 ## 0.5.0
 
 The package was internally rewritten to make it completely compatible with native classes such as Page, CupertinoPage, MaterialPage when transitionating between them. Which was not possible before if you were using both them and GoTransitions.
