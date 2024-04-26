@@ -1,6 +1,6 @@
 name: go_transitions
 description: "Easily create, combine and apply transitions to routes with GoTransitions."
-version: 0.5.0
+version: 0.5.2
 homepage: https://www.branvier.com
 repository: https://github.com/arthurbcd/go_transitions.git
 topics:
@@ -16,7 +16,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  go_router: '>=13.0.0 <14.0.0'
+  go_router: '>=13.0.0 <15.0.0'
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2
+
+- Bump `go_router` for `14.0.0`.
+
 ## 0.5.1
 
 - Fixed allowSnapshotting recursive call.
