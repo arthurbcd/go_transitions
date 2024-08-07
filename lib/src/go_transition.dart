@@ -500,7 +500,12 @@ extension GoTransitionExtension on GoTransition {
 }
 
 typedef PageRouteTransitionsBuilder = Widget Function(
-    PageRoute, BuildContext, Animation<double>, Animation<double>, Widget);
+  PageRoute route,
+  BuildContext context,
+  Animation<double> animation,
+  Animation<double> secondaryAnimation,
+  Widget child,
+);
 
 typedef CanTransition = bool Function(TransitionRoute nextRoute);
 

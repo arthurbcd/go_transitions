@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+
+- Added `withBackGesture` modifier.
+
 ## 0.5.3
 
 - Fixed #2 `GoTransitions.cupertino` back swipe gestures.

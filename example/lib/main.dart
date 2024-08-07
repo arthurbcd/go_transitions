@@ -53,12 +53,12 @@ class MainApp extends StatelessWidget {
                   GoRoute(
                     path: 'slide',
                     builder: (_, __) => const HomePage(),
-                    pageBuilder: GoTransitions.slide.toRight.onPrevious,
+                    pageBuilder: GoTransitions.slide.toRight.withBackGesture,
                   ),
                   GoRoute(
                     path: 'fade',
                     builder: (_, __) => const HomePage(),
-                    pageBuilder: GoTransitions.fade,
+                    pageBuilder: GoTransitions.fade.withBackGesture,
                   ),
                   GoRoute(
                     path: 'size',
@@ -68,7 +68,7 @@ class MainApp extends StatelessWidget {
                   GoRoute(
                     path: 'rotate',
                     builder: (_, __) => const HomePage(),
-                    pageBuilder: GoTransitions.rotate,
+                    pageBuilder: GoTransitions.rotate.withBackGesture,
                   ),
                   GoRoute(
                     path: 'scale',

@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:go_transitions/go_transitions.dart';
 
 import 'go_transition.dart';
@@ -179,6 +178,24 @@ extension GoTransitionModifiers on GoTransition {
           alignment: style.alignment ?? go?.alignment ?? Alignment.center,
           child: builder(route, context, animation, secondaryAnimation, child),
         );
+      },
+    );
+  }
+
+  /// Returns a new [GoTransition] with a [CupertinoPageTransition] back-gesture support.
+  GoTransition get withBackGesture {
+    return copyWith(
+      builder: (route, context, animation, secondaryAnimation, child) {
+        final transition = CupertinoRouteTransitionMixin.buildPageTransitions(
+          route,
+          context,
+          animation,
+          secondaryAnimation,
+          builder(route, context, animation, secondaryAnimation, child),
+        );
+
+        // _CupertinoBackGestureDetector
+        return (transition as dynamic).child;
       },
     );
   }

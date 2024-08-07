@@ -91,6 +91,7 @@ Modifiers:
 - withScale
 - withSize
 - withSlide
+- withBackGesture
 - toLeft
 - toRight
 - toTop
