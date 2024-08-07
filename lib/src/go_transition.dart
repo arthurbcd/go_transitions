@@ -276,8 +276,7 @@ class GoTransitionPage
     secondaryAnimation,
     child,
   ) {
-    if (!animation.isAnimating && !secondaryAnimation.isAnimating) return child;
-
+    // if (!animation.isAnimating && !secondaryAnimation.isAnimating) return child;
     return GoTransitionScope(
       style: style.applyOnPrevious ? this.style.inverted : this.style,
       child: Builder(
@@ -465,10 +464,10 @@ class _GoTransitionObserver extends NavigatorObserver {
   }
 }
 
-extension on Animation {
-  bool get isAnimating =>
-      status == AnimationStatus.forward || status == AnimationStatus.reverse;
-}
+// extension on Animation {
+// bool get isAnimating =>
+//     status == AnimationStatus.forward || status == AnimationStatus.reverse;
+// }
 
 extension GoTransitionExtension on GoTransition {
   /// Builds a [GoRouterPageBuilder] of this [GoTransition].

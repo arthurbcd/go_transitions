@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.3
+
+- Fixed #2 `GoTransitions.cupertino` back swipe gestures.
+
+Thanks to `Clon1998`.
+
 ## 0.5.2
 
 - Bump `go_router` for `14.0.0`.
