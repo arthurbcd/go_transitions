@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.0
+
+- Bump min version constraints to flutter 3.24.0.
+- Added `Page.canPop` and `Page.onPopInvoked` to `GoTransitionPage`, `GoTransition`, `MaterialGoTransition` and `CupertinoGoTransition`.
+
 ## 0.6.0
 
 - Added `withBackGesture` modifier.

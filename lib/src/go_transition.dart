@@ -237,8 +237,12 @@ class GoTransitionPage
     PageRouteTransitionsBuilder? builder,
     this.style = const GoTransitionStyle(),
     this.settings = const GoTransitionSettings(),
+    this.canPop = true,
+    this.onPopInvoked = _defaultPopInvokedHandler,
     required this.child,
   }) : builder = builder ?? _noPageTransition;
+
+  static void _defaultPopInvokedHandler(bool didPop, Object? result) {}
 
   /// The [buildTransitions] style.
   final GoTransitionStyle style;
@@ -248,6 +252,12 @@ class GoTransitionPage
 
   /// The [buildTransitions] builder.
   final PageRouteTransitionsBuilder builder;
+
+  @override
+  final bool canPop;
+
+  @override
+  final PopInvokedWithResultCallback onPopInvoked;
 
   @override
   final Widget child;
@@ -380,6 +390,8 @@ class GoTransition extends GoTransitionPage {
     super.builder,
     super.style,
     super.settings,
+    super.canPop,
+    super.onPopInvoked,
     Widget? child,
   }) : super(child: child ?? const _NoChild());
 
@@ -411,12 +423,16 @@ class GoTransition extends GoTransitionPage {
     PageRouteTransitionsBuilder? builder,
     GoTransitionStyle? style,
     GoTransitionSettings? settings,
+    bool? canPop,
+    PopInvokedWithResultCallback? onPopInvoked,
     Widget? child,
   }) {
     return GoTransition(
       builder: builder ?? this.builder,
       style: style ?? this.style,
       settings: settings ?? this.settings,
+      canPop: canPop ?? this.canPop,
+      onPopInvoked: onPopInvoked ?? this.onPopInvoked,
       child: child ?? this.child,
     );
   }

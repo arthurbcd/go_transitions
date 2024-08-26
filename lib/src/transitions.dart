@@ -117,6 +117,8 @@ class GoCupertinoPage extends GoTransition implements CupertinoPage {
     super.builder = CupertinoRouteTransitionMixin.buildPageTransitions<dynamic>,
     super.style,
     super.settings,
+    super.canPop,
+    super.onPopInvoked,
     super.child,
   });
 
@@ -129,6 +131,8 @@ class GoCupertinoPage extends GoTransition implements CupertinoPage {
     PageRouteTransitionsBuilder? builder,
     GoTransitionStyle? style,
     GoTransitionSettings? settings,
+    bool? canPop,
+    PopInvokedWithResultCallback? onPopInvoked,
     Widget? child,
   }) {
     return GoCupertinoPage(
@@ -136,6 +140,8 @@ class GoCupertinoPage extends GoTransition implements CupertinoPage {
       builder: builder ?? this.builder,
       style: style ?? this.style,
       settings: settings ?? this.settings,
+      canPop: canPop ?? this.canPop,
+      onPopInvoked: onPopInvoked ?? this.onPopInvoked,
       child: child ?? this.child,
     );
   }
@@ -157,6 +163,8 @@ class GoMaterialPage extends GoTransition implements MaterialPage {
     super.builder,
     super.style,
     super.settings,
+    super.canPop,
+    super.onPopInvoked,
     super.child,
   });
 
@@ -165,12 +173,16 @@ class GoMaterialPage extends GoTransition implements MaterialPage {
     PageRouteTransitionsBuilder? builder,
     GoTransitionStyle? style,
     GoTransitionSettings? settings,
+    bool? canPop,
+    PopInvokedWithResultCallback? onPopInvoked,
     Widget? child,
   }) {
     return GoMaterialPage(
       builder: builder ?? this.builder,
       style: style ?? this.style,
       settings: settings ?? this.settings,
+      canPop: canPop ?? this.canPop,
+      onPopInvoked: onPopInvoked ?? this.onPopInvoked,
       child: child ?? this.child,
     );
   }
