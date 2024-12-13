@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.1
+
+- Fixed #4 'noSuchMethod' implementation on flutter 3.27.0. 
+
+Thanks to `Clon1998`.
+
 ## 0.7.0
 
 - Bump min version constraints to flutter 3.24.0.

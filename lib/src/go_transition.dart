@@ -227,9 +227,9 @@ mixin TransitionData {
 }
 
 @immutable
-class GoTransitionPage
+class GoTransitionPage extends PageTransitionsBuilder
     with TransitionData
-    implements CustomTransitionPage, PageTransitionsBuilder {
+    implements CustomTransitionPage {
   /// Creates a [GoTransitionPage].
   ///
   /// It's compatible with both [Page] and [PageTransitionsBuilder].
