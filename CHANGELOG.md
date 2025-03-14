@@ -1,5 +1,14 @@
 # Changelog
 
+## WIP - DelegatedBuilder
+
+- WIP Deprecates onPrevious and previousChildOf in favor of GoTransition.delegatedBuilder.
+- Added [GoTransition.delegatedBuilder].
+- Added [GoTransitionAsBuilderExtension].
+- Added [TransitionData.delegatedTrasition].
+- Fixed missing default constructor builder in [GoTransitions.material].
+- Bump min version constraints to flutter 3.27, sdk 3.6.0.
+
 ## 0.7.1
 
 - Fixed #4 'noSuchMethod' implementation on flutter 3.27.0. 
