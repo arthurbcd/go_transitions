@@ -48,7 +48,7 @@ class MainApp extends StatelessWidget {
                   GoRoute(
                     path: 'theme/:id',
                     builder: (_, __) => const HomePage(),
-                    pageBuilder: GoTransitions.cupertino,
+                    pageBuilder: GoTransitions.slide.toRight.withFade,
                   ),
                   GoRoute(
                     path: 'slide',
@@ -167,6 +167,17 @@ class InitialPage extends StatelessWidget {
                 context.go('/bottom-sheet');
               },
               child: const Text('Go to MyBottomSheet'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  GoTransitionRoute(
+                    transition: GoTransitions.rotate.withBackGesture,
+                    builder: (context) => const HomePage(),
+                  ),
+                );
+              },
+              child: const Text('Push HomePage with GoTransitionRoute'),
             ),
           ],
         ),

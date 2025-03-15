@@ -46,18 +46,7 @@ class MainApp extends StatelessWidget {
 
 ## Building the Transitions
 
-By default `GoTransition.build` is called through implicit tear-off with default values, but you can call it explicitly:
-
-```dart
-GoTransitions.slide.toRight.withFade.build(
-  duration: const Duration(milliseconds: 600),
-  barrierColor: Colors.black45,
-);
-```
-
-## Custom Transitions
-
-Easily create and apply custom transitions such as fade, slide, rotate, scale, and more:
+By default `GoTransition.build` and `builder` are called through implicit tear-off:
 
 ```dart
 GoRoute(
@@ -66,6 +55,36 @@ GoRoute(
   pageBuilder: GoTransitions.slide.toRight.withFade,
 ),
 ```
+
+But you can call it explicitly if you want to:
+
+```dart
+GoRoute(
+  path: 'slide',
+  pageBuilder: GoTransitions.slide.toRight.withFade.build(
+    builder: (_, __) => const HomePage(),
+    // child: const HomePage(), // <- or directly pass it
+  ),
+),
+```
+
+## Navigating outside the router
+
+You can use `GoTransitionRoute` to navigate outside the router, for example, when using `Navigator`:
+
+```dart
+Navigator.of(context).push(
+  GoTransitionRoute(
+    transition: GoTransitions.rotate.withBackGesture, // <- my awesome transition
+    builder: (context) => const HomePage(),
+  ),
+);
+```
+
+## Custom Transitions
+
+Easily create and apply custom transitions such as fade, slide, rotate, scale, and more:
+
 
 ## Transitions
 
@@ -97,7 +116,7 @@ Modifiers:
 - toTop
 - toBottom
 
-Sintax-sugar:
+Syntax-sugar:
 
 - fullscreenDialog
 - dialog (RawDialogRoute)

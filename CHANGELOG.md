@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.8.0
+
+- Added `GoTransitionRoute` for using transitions outside go_router, ex: `Navigator.push`.
+- Added #5 `GoTransition.build(GoRouterWidgetBuilder? builder)` alternative to `child`.
+
+Thanks to `fiet-kyo`.
+
+- Improved inferred `GoRouter.builder` child in `GoTransition.call`.
+- Fixed missing `GoTransitionPage.builder` default implementation.
+- Updated `README.md` with details about the new features.
+- Moved `canPop` & `onPopInvoked` to `GoTransitionSettings`.
+- Bump min sdk to 3.5.0 to match flutter >= 3.24.0.
+
 ## 0.7.1
 
 - Fixed #4 'noSuchMethod' implementation on flutter 3.27.0. 

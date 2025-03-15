@@ -1,16 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:go_transitions/go_transitions.dart';
 
 import 'go_transition.dart';
-
-extension GoReverseAnimationExtension on Animation<double> {
-  Animation<double> get reversed => drive(Tween<double>(begin: 1, end: 0));
-}
-
-extension PreviousChildContextExtension on BuildContext {
-  /// Returns the child of the previous route.
-  Widget? get previousChild => GoTransition.previousChildOf(this);
-}
 
 extension GoTransitionModifiers on GoTransition {
   /// Returns a new [GoTransition] with the given [style] properties.
@@ -239,4 +229,13 @@ extension GoTransitionModifiers on GoTransition {
       alignment: style.alignment ?? Alignment.topCenter,
     );
   }
+}
+
+extension GoReverseAnimationExtension on Animation<double> {
+  Animation<double> get reversed => drive(Tween<double>(begin: 1, end: 0));
+}
+
+extension PreviousChildContextExtension on BuildContext {
+  /// Returns the child of the previous route.
+  Widget? get previousChild => GoTransition.previousChildOf(this);
 }
