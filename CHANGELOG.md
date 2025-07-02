@@ -1,11 +1,23 @@
 # Changelog
 
+## 0.8.2
+
+- Fix #8, bump `go_router` to '>=13.0.0 <17.0.0'.
+
+Thanks for `realtec` !
+
+## 0.8.1
+
+- Fix #6, bump `go_router` to '>=13.0.0 <16.0.0'
+
+Thanks to `paulking86` !
+
 ## 0.8.0
 
 - Added `GoTransitionRoute` for using transitions outside go_router, ex: `Navigator.push`.
 - Added #5 `GoTransition.build(GoRouterWidgetBuilder? builder)` alternative to `child`.
 
-Thanks to `fiet-kyo`.
+Thanks to `fiet-kyo`!
 
 - Improved inferred `GoRouter.builder` child in `GoTransition.call`.
 - Fixed missing `GoTransitionPage.builder` default implementation.
@@ -17,7 +29,7 @@ Thanks to `fiet-kyo`.
 
 - Fixed #4 'noSuchMethod' implementation on flutter 3.27.0. 
 
-Thanks to `Clon1998`.
+Thanks to `Clon1998`!
 
 ## 0.7.0
 
@@ -32,7 +44,7 @@ Thanks to `Clon1998`.
 
 - Fixed #2 `GoTransitions.cupertino` back swipe gestures.
 
-Thanks to `Clon1998`.
+Thanks to `Clon1998`!
 
 ## 0.5.2
 
@@ -60,7 +72,7 @@ Experimental: Now you can apply complex transitions on both previous and current
 
 Ex: `GoTransition.slide.toRight.onPrevious`.
 
-Thanks to `jtkeyva` for the contribution.
+Thanks to `jtkeyva` for the contribution!
 
 ## 0.4.0
 
