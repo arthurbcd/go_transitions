@@ -1,10 +1,16 @@
 # Changelog
 
+## 0.8.3
+
+- bump `go_router` to '>=13.0.0 <18.0.0'
+
+Thanks to `runoob-coder` !
+
 ## 0.8.2
 
 - Fix #8, bump `go_router` to '>=13.0.0 <17.0.0'.
 
-Thanks for `realtec` !
+Thanks to `realtec` !
 
 ## 0.8.1
 
